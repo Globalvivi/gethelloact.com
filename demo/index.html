@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,"><!-- empty inline icon: stops the browser's automatic /favicon.ico request — this page makes no request at all -->
+<title>helloACT — concept preview: protection landscape</title>
+<!--
+  helloACT — marketing/demo/index.html — MARKETING-DEMO-001 (directive v0.1.0, 2026-09-09).
+  A PUBLIC, STANDALONE marketing illustration of the post-2.0.0 vision: the protection-landscape view (Level 0–1,
+  authorized by INSURANCE-ROLE-001 + the Purchase Data Boundary) and a clickable, ENTIRELY FABRICATED preview of what
+  Level-3 insurance quoting would look like. Classification: BRANCH/ISOLATE. This file is its own module:
+    · no script, stylesheet, font, image or request leaves this file — zero network calls of any kind;
+    · no import from, call into, or reference to the app bundle or any src/ module — the directive's §1 list of
+      production paths included — ever (tests/marketing_demo_test.js greps this file for each of them);
+    · no visitor data is collected: there is no text input on this page;
+    · every partner is fictional, every number is prefixed "Example:" and fixed regardless of what is selected;
+    · the "CONCEPT — MARKETING ONLY" chip is fixed on every screen of the insurance flow; a page-built interstitial
+      (never a native dialog) blocks entry once per session.
+  Not production. Not an early version of the real feature (project doctrine §9: graduation is an explicit decision).
+  The whole surface hangs on MARKETING_DEMO_PREVIEW below — one place to pull it.
+-->
+<style>
+  /* UI Kit v1.1.0 tokens (external page shell, Deep Teal + Geist) — copied VALUES only; nothing is shared with the app bundle. */
+  :root {
+    --ha-bg:#fff; --ha-surface:#fff; --ha-surface-quiet:#f6f6f6; --ha-border:#ececec;
+    --ha-ink:#000; --ha-ink-2:rgba(0,0,0,.64); --ha-ink-3:rgba(0,0,0,.44);
+    --ha-brand:#0f2625; --ha-brand-hover:#183b39; --ha-brand-press:#091817; --ha-brand-on:#fff;
+    --ha-info:#00aeea; --ha-success:#00d95f; --ha-pending:#ffe733; --ha-warning:#ff8a33; --ha-error:#ff5f68;
+    --ha-radius-sm:4px; --ha-radius-md:8px; --ha-radius-lg:12px; --ha-radius-xl:16px; --ha-radius-pill:999px;
+    --ha-dur-1:120ms; --ha-dur-2:220ms; --ha-ease-out:cubic-bezier(.2,.8,.3,1);
+    --ha-z-chrome:40; --ha-z-scrim:800; --ha-z-modal:900;
+    --ha-shadow-1:0 1px 2px rgba(0,0,0,.06); --ha-shadow-2:0 8px 28px rgba(0,0,0,.08); --ha-shadow-3:0 24px 70px rgba(0,0,0,.16);
+    --ha-focus:0 0 0 2px #fff,0 0 0 4px #0f2625;
+    --ha-font-sans:'Geist',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --ha-font-mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    /* the concept chip is deliberately OUTSIDE the kit's status vocabulary (no neon, no success/warning/error): magenta on ink */
+    --demo-chip-bg:#1a0a14; --demo-chip-fg:#ff4fba; --demo-chip-border:#ff4fba;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --ha-bg:#0e0e0e; --ha-surface:#0e0e0e; --ha-surface-quiet:#181818; --ha-border:#2a2a2a;
+    --ha-ink:#fff; --ha-ink-2:rgba(255,255,255,.70); --ha-ink-3:rgba(255,255,255,.48);
+    --ha-brand:#1a5c56; --ha-brand-hover:#216d65; --ha-brand-press:#144a45;
+    --ha-shadow-1:0 1px 2px rgba(0,0,0,.22); --ha-shadow-2:0 8px 28px rgba(0,0,0,.30); --ha-shadow-3:0 24px 70px rgba(0,0,0,.48);
+    --ha-focus:0 0 0 2px #0e0e0e,0 0 0 4px #fff; --demo-chip-bg:#ff4fba; --demo-chip-fg:#1a0a14; --demo-chip-border:#ff4fba; } }
+  *, *::before, *::after { box-sizing:border-box; }
+  html, body { margin:0; background:var(--ha-bg); color:var(--ha-ink); font:14px/1.5 var(--ha-font-sans); }
+  a { color:var(--ha-brand); }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  :focus-visible { outline:none; box-shadow:var(--ha-focus); }
+  .mono { font-family:var(--ha-font-mono); }
+  /* zone 1 · global identity */
+  .top { position:sticky; top:0; z-index:var(--ha-z-chrome); display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:64px; padding:0 24px; background:var(--ha-bg); border-bottom:1px solid var(--ha-border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.01em; font-size:17px; }
+  .brand .mark { width:28px; height:28px; border-radius:8px; background:var(--ha-brand); color:var(--ha-brand-on); display:grid; place-items:center; font-weight:800; font-size:15px; }
+  .util { display:flex; gap:14px; color:var(--ha-ink-2); font-size:12px; }
+  /* zone 2 · context tier */
+  .context { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 24px; border-bottom:1px solid var(--ha-border); background:var(--ha-surface-quiet); font-size:12px; color:var(--ha-ink-2); }
+  /* zone 3 · page task */
+  .page { max-width:960px; margin:0 auto; padding:40px 24px 64px; }
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ha-ink-3); }
+  h1 { font-size:34px; line-height:1.1; letter-spacing:-.02em; margin:10px 0 12px; font-weight:650; }
+  h2 { font-size:22px; letter-spacing:-.015em; margin:36px 0 8px; font-weight:650; }
+  h3 { font-size:16px; margin:0 0 6px; font-weight:650; }
+  p.lead { font-size:16px; color:var(--ha-ink-2); max-width:640px; margin:0 0 8px; }
+  .note-chip { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--ha-border); background:var(--ha-surface); color:var(--ha-ink-2); border-radius:var(--ha-radius-pill); padding:5px 10px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .card { border:1px solid var(--ha-border); border-radius:var(--ha-radius-lg); background:var(--ha-surface); padding:18px; box-shadow:var(--ha-shadow-1); }
+  .card.quiet { background:var(--ha-surface-quiet); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:14px; }
+  .kicker { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ha-ink-3); font-weight:700; margin-bottom:8px; }
+  .sub { font-size:12px; color:var(--ha-ink-2); }
+  /* epistemic states (project doctrine §8) — plain words, no severity colour */
+  .state { display:inline-block; font-family:var(--ha-font-mono); font-size:11px; padding:3px 8px; border-radius:var(--ha-radius-sm); border:1px solid var(--ha-border); color:var(--ha-ink); background:var(--ha-surface); margin-bottom:8px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:0 16px; border:1px solid transparent; border-radius:var(--ha-radius-md); font-weight:650; background:var(--ha-brand); color:var(--ha-brand-on); transition:background var(--ha-dur-1),transform var(--ha-dur-1); text-decoration:none; }
+  .btn:hover { background:var(--ha-brand-hover); transform:translateY(-1px); } .btn:active { background:var(--ha-brand-press); transform:none; }
+  .btn.quiet { background:var(--ha-surface); border-color:var(--ha-border); color:var(--ha-ink); } .btn.quiet:hover { background:var(--ha-surface-quiet); }
+  .btn.sm { min-height:34px; padding:0 12px; font-size:12px; }
+  /* zone 5 · footer */
+  .foot { border-top:1px solid var(--ha-border); padding:28px 24px; color:var(--ha-ink-3); font-size:12px; display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between; }
+  /* ── the concept flow ─────────────────────────────────────────────────────── */
+  #flow { display:none; margin-top:18px; border:1px dashed var(--demo-chip-border); border-radius:var(--ha-radius-xl); padding:0; overflow:clip; scroll-margin-top:64px; } /* clip, not hidden: hidden would make #flow the chip's scroll container and the chip would never stick to the viewport */
+  #flow.open { display:block; }
+  /* the chip: fixed at the top of the flow, present on EVERY screen; deliberately not a kit status badge */
+  .demo-chip { position:sticky; top:64px; z-index:calc(var(--ha-z-chrome) - 1); display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 14px; background:var(--demo-chip-bg); color:var(--demo-chip-fg); border-bottom:1px solid var(--demo-chip-border); font-family:var(--ha-font-mono); font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+  .demo-chip .lite { font-weight:500; letter-spacing:0; text-transform:none; opacity:.9; }
+  .screen { display:none; padding:22px; } .screen.active { display:block; }
+  .steps { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--ha-ink-3); margin-bottom:14px; }
+  .steps b { color:var(--ha-ink); }
+  .choice { display:flex; gap:12px; align-items:flex-start; border:1px solid var(--ha-border); border-radius:var(--ha-radius-md); padding:14px; background:var(--ha-surface); cursor:pointer; }
+  .choice input { margin-top:3px; accent-color:var(--ha-brand); }
+  .choice.selected { border-color:var(--ha-brand); background:var(--ha-surface-quiet); }
+  .row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px 0; border-top:1px solid var(--ha-border); }
+  .row:first-of-type { border-top:none; }
+  .example { font-family:var(--ha-font-mono); font-size:12.5px; color:var(--ha-ink); }
+  .example .ex { color:var(--demo-chip-fg); background:var(--demo-chip-bg); border-radius:var(--ha-radius-sm); padding:1px 5px; margin-right:6px; font-size:10px; letter-spacing:.06em; }
+  .actions { display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; }
+  /* interstitial — a page component, never a native dialog */
+  .scrim { position:fixed; inset:0; z-index:var(--ha-z-scrim); display:none; align-items:center; justify-content:center; padding:20px; background:color-mix(in srgb, var(--ha-bg) 78%, transparent); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+  .scrim.show { display:flex; }
+  .modal { z-index:var(--ha-z-modal); width:min(560px,100%); background:var(--ha-surface); border:1px solid var(--ha-border); border-radius:var(--ha-radius-xl); box-shadow:var(--ha-shadow-3); overflow:hidden; }
+  .modal-head { padding:20px 22px 14px; border-bottom:1px solid var(--ha-border); }
+  .modal-head h3 { font-size:20px; }
+  .modal-body { padding:18px 22px; color:var(--ha-ink-2); }
+  .modal-body p { margin:0 0 10px; }
+  .modal-foot { padding:14px 22px 20px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--ha-border); }
+  #dark-note { display:none; }
+  .off #dark-note { display:block; } .off .live { display:none !important; }
+  @media (max-width:640px) { h1 { font-size:28px; } .top, .context { padding-left:16px; padding-right:16px; } .page { padding:28px 16px 48px; } }
+</style>
+</head>
+<body>
+<header class="top" role="banner">
+  <div class="brand"><span class="mark" aria-hidden="true">h</span> helloACT</div>
+  <div class="util"><span>Concept preview</span><span>EN</span></div>
+</header>
+<div class="context"><span>Individual · what you own, what protects it</span><span class="note-chip">Illustrative example</span></div>
+
+<main class="page" id="main">
+  <div id="dark-note" class="card quiet"><h3>This preview is not available.</h3><p class="sub">MARKETING_DEMO_PREVIEW is off in this build.</p></div>
+
+  <section class="live" id="landscape">
+    <div class="eyebrow">Protection landscape · illustrative example</div>
+    <h1>What helloACT will know about what you own.</h1>
+    <p class="lead">Not just where your accounts are — what each thing you bought is protected by, what it isn't, and what that means. Everything on this page is a made-up example. Nothing here is your data.</p>
+    <span class="note-chip">Example item · no real data</span>
+
+    <div class="card" style="margin-top:14px">
+      <div class="kicker">Example item</div>
+      <h3>Aria 4K Camera <span class="sub">· purchased March 2025 · <span class="example"><span class="ex">Example</span>$1,299</span></span></h3>
+      <p class="sub" style="margin:0">A fictional camera bought with a fictional card at a fictional store. helloACT would derive the three cards below from the receipt the owner holds, the manufacturer's published terms and the card's published benefits — each with its source and date.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <span class="state">KNOWN</span>
+        <div class="kicker">Manufacturer warranty</div>
+        <h3>2 years · ends March 2027</h3>
+        <p class="sub">From the maker's published terms for this model (example). Covers defects in materials and workmanship. Registration: <b>not on file</b> — one of the gaps helloACT would name.</p>
+      </div>
+      <div class="card">
+        <span class="state">LIKELY · CHECK RECOMMENDED</span>
+        <div class="kicker">Card benefit</div>
+        <h3>+1 year extended warranty</h3>
+        <p class="sub">The example card's published benefit guide extends the maker's warranty by up to one year. "Likely" because the benefit depends on the card that paid — a fact the owner attests, not one helloACT can verify.</p>
+      </div>
+      <div class="card quiet" id="gap-card">
+        <span class="state">GAP</span>
+        <div class="kicker">Accidental damage</div>
+        <h3>Not covered — by either</h3>
+        <p class="sub">Neither the warranty nor the card benefit covers drops, spills or theft. This is the kind of gap helloACT would surface — and, one day, help you close.</p>
+        <button class="btn sm" id="explore-btn" type="button">Explore coverage →</button>
+      </div>
+    </div>
+
+    <!-- ── the Level-3 concept flow: entirely fabricated ─────────────────────── -->
+    <div id="flow" aria-live="polite">
+      <div class="demo-chip" id="demo-chip"><span>CONCEPT — MARKETING ONLY · NOT AVAILABLE</span><span class="lite">no real partner · no real data · pending regulatory review</span></div>
+
+      <section class="screen active" id="s1" aria-label="Step 1 of 3">
+        <div class="steps"><b>1 · Coverage type</b><span>›</span><span>2 · Example options</span><span>›</span><span>3 · Example quote</span></div>
+        <h3>What would you want covered?</h3>
+        <p class="sub">A concept of the choice helloACT would offer. Picking one changes nothing below except the words — every number on the next screens is a fixed example.</p>
+        <div style="display:grid; gap:10px; margin-top:12px">
+          <label class="choice selected"><input type="radio" name="cov" value="Accidental damage" checked> <span><b>Accidental damage</b><br><span class="sub">Drops, spills, cracked screens.</span></span></label>
+          <label class="choice"><input type="radio" name="cov" value="Theft"> <span><b>Theft</b><br><span class="sub">Loss by theft, at home or away.</span></span></label>
+          <label class="choice"><input type="radio" name="cov" value="Extended protection"> <span><b>Extended protection</b><br><span class="sub">Defects after the maker's warranty ends.</span></span></label>
+        </div>
+        <div class="actions"><button class="btn" type="button" data-go="s2">See example options →</button><button class="btn quiet" type="button" data-close>Leave the concept</button></div>
+      </section>
+
+      <section class="screen" id="s2" aria-label="Step 2 of 3">
+        <div class="steps"><span>1 · Coverage type</span><span>›</span><b>2 · Example options</b><span>›</span><span>3 · Example quote</span></div>
+        <h3>Example options for <span id="cov-echo">Accidental damage</span></h3>
+        <p class="sub">Fictional partners, fixed example numbers. In the real product every list would state its ordering basis; this one is ordered <b>as written, by no basis at all</b>.</p>
+        <div class="card" style="margin-top:12px">
+          <div class="row"><div><b>Partner A</b><div class="sub">Fictional insurer · example only</div></div><div class="example"><span class="ex">Example</span>$8 / month</div><button class="btn sm" type="button" data-go="s3" data-partner="Partner A">Example quote →</button></div>
+          <div class="row"><div><b>Partner B</b><div class="sub">Fictional insurer · example only</div></div><div class="example"><span class="ex">Example</span>$8 / month</div><button class="btn sm" type="button" data-go="s3" data-partner="Partner B">Example quote →</button></div>
+          <div class="row"><div><b>Sample Insurer</b><div class="sub">Fictional insurer · example only</div></div><div class="example"><span class="ex">Example</span>$8 / month</div><button class="btn sm" type="button" data-go="s3" data-partner="Sample Insurer">Example quote →</button></div>
+        </div>
+        <div class="actions"><button class="btn quiet" type="button" data-go="s1">← Back</button><button class="btn quiet" type="button" data-close>Leave the concept</button></div>
+      </section>
+
+      <section class="screen" id="s3" aria-label="Step 3 of 3">
+        <div class="steps"><span>1 · Coverage type</span><span>›</span><span>2 · Example options</span><span>›</span><b>3 · Example quote</b></div>
+        <h3>An example quote from <span id="partner-echo">Partner A</span></h3>
+        <p class="sub">This is an illustration of how helloACT would <i>present</i> a partner's figure — with its source, its date and what it is not. It is not a quote, an offer, a price or a solicitation of anything.</p>
+        <div class="card" style="margin-top:12px">
+          <div class="row"><span>Coverage</span><span id="cov-echo-2" class="example">Accidental damage</span></div>
+          <div class="row"><span>Monthly</span><span class="example"><span class="ex">Example</span>$8.00 / month</span></div>
+          <div class="row"><span>Deductible</span><span class="example"><span class="ex">Example</span>$99 per claim</span></div>
+          <div class="row"><span>Term</span><span class="example"><span class="ex">Example</span>12 months</span></div>
+          <div class="row"><span>Source</span><span class="example"><span id="partner-echo-2">Partner A</span> (fictional) · <span class="ex">Example</span>indicative, not binding</span></div>
+        </div>
+        <div class="card quiet" style="margin-top:12px">
+          <div class="kicker">What helloACT would share to get a figure like this</div>
+          <p class="sub" style="margin:0">Only what the item needs: its category, brand and model, the purchase month and total, the coverage type and your region. Never a serial number, never your contact details, never your other records — and only after you saw the exact list and said yes.</p>
+        </div>
+        <div class="actions"><button class="btn quiet" type="button" data-go="s2">← Back</button><button class="btn" type="button" data-close>Done — leave the concept</button></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>helloACT · concept preview · MARKETING-DEMO-001</span>
+  <span>This page uses no real data, names no real insurer or broker, collects nothing, and makes no network requests.</span>
+</footer>
+
+<!-- interstitial: a page component (no native alert/confirm/prompt anywhere in this file) -->
+<div class="scrim" id="interstitial" role="dialog" aria-modal="true" aria-labelledby="int-title" aria-describedby="int-body">
+  <div class="modal">
+    <div class="modal-head"><span class="note-chip" style="border-color:var(--demo-chip-border); color:var(--demo-chip-fg); background:var(--demo-chip-bg)">Concept — marketing only</span><h3 id="int-title" style="margin-top:10px">Before you look at this concept</h3></div>
+    <div class="modal-body" id="int-body">
+      <p>This is a conceptual preview of a future helloACT capability. It uses no real data, no real insurance partner, and is not an offer, quote, or solicitation of any product.</p>
+      <p>This feature does not exist yet and is pending regulatory review. Every partner name on the next screens is fictional and every number is a fixed example.</p>
+    </div>
+    <div class="modal-foot"><button class="btn quiet" type="button" id="int-cancel">Not now</button><button class="btn" type="button" id="int-ok">Got it — show me the concept</button></div>
+  </div>
+</div>
+
+<script>
+// ============ MARKETING-DEMO-001 — preview flag (dark by default in the pattern of MARKETPLACE_PREVIEW / F45_SHOWROOM_PREVIEW) ============
+// The directive v0.1.0 (2026-09-09) authorizes a PUBLIC, unrestricted demo (Vincent's call), so the flag ships ON in this
+// file. To pull the whole surface: set it to false — the page then renders only the "not available" note. Nothing else
+// in this file is reachable when it is off.
+const MARKETING_DEMO_PREVIEW = true;
+(function () {
+  'use strict';
+  if (!MARKETING_DEMO_PREVIEW) { document.body.classList.add('off'); return; }
+  const ACK_KEY = 'hact_demo_interstitial_ack';           // once per session (sessionStorage — this browser tab only, no server)
+  const $ = (s) => document.querySelector(s);
+  const flow = $('#flow'), inter = $('#interstitial'), chip = $('#demo-chip');
+  let acked = false; try { acked = sessionStorage.getItem(ACK_KEY) === '1'; } catch (_) { acked = false; }
+  const show = (id) => { document.querySelectorAll('.screen').forEach((s) => s.classList.toggle('active', s.id === id)); chip.scrollIntoView({ block: 'nearest' }); };
+  const openFlow = () => { flow.classList.add('open'); show('s1'); flow.scrollIntoView({ block: 'start', behavior: 'smooth' }); };
+  const closeFlow = () => { flow.classList.remove('open'); $('#gap-card').scrollIntoView({ block: 'center' }); };
+  const closeInter = () => { inter.classList.remove('show'); };
+  $('#explore-btn').addEventListener('click', () => {
+    if (acked) { openFlow(); return; }
+    inter.classList.add('show'); $('#int-ok').focus();           // blocks entry until an explicit dismissal
+  });
+  $('#int-ok').addEventListener('click', () => { acked = true; try { sessionStorage.setItem(ACK_KEY, '1'); } catch (_) {} closeInter(); openFlow(); });
+  $('#int-cancel').addEventListener('click', closeInter);
+  inter.addEventListener('click', (e) => { if (e.target === inter) closeInter(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && inter.classList.contains('show')) closeInter(); });
+  // coverage choice: changes the words only — the numbers are fixed examples on purpose
+  document.querySelectorAll('input[name="cov"]').forEach((r) => r.addEventListener('change', () => {
+    document.querySelectorAll('.choice').forEach((c) => c.classList.toggle('selected', c.querySelector('input').checked));
+    $('#cov-echo').textContent = r.value; $('#cov-echo-2').textContent = r.value;
+  }));
+  flow.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.partner) { $('#partner-echo').textContent = b.dataset.partner; $('#partner-echo-2').textContent = b.dataset.partner; }
+    if (b.dataset.go) show(b.dataset.go);
+    if (b.hasAttribute('data-close')) closeFlow();
+  });
+})();
+</script>
+</body>
+</html>
